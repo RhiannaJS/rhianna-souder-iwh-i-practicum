@@ -20,7 +20,29 @@ const PRIVATE_APP_ACCESS = '';
 
 // TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
 
-// * Code for Route 3 goes here
+// POST form submission
+app.post('/update-cobj', async (req, res) => {
+    const { pet_name, pet_breed, pet_favorite_toy } = req.body
+
+    try {
+        const response = await axios.post(`${HUBSPOT_API_URL}/crm/v3/objects/${OBJECT_TYPE_ID}`, {
+            properties: {
+                pet_name, 
+                pet_breed, 
+                pet_favorite_toy,
+            },
+        }, {
+            headers: {
+                Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        res.redirect('/');
+    } catch(err) {
+        console.error('Error creating object:', err.response?.data || err.message);
+        res.status(500).send('Failed to create record');
+    }
+});
 
 /** 
 * * This is sample code to give you a reference for how you should structure your calls. 
