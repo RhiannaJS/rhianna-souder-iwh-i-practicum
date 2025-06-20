@@ -16,13 +16,18 @@ const PRIVATE_APP_ACCESS = '';
 
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
 
-// * Code for Route 2 goes here
+app.get('/update-cobj', (req, res) => {
+    res.render('updates', {
+        title: 'Update Custom Object Form | Integrating With HubSpot I Practicum',
+    });
+});
 
 // TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
 
 // POST form submission
 app.post('/update-cobj', async (req, res) => {
-    const { pet_name, pet_breed, pet_favorite_toy } = req.body
+    const { pet_name, pet_breed, pet_favorite_toy } = req.body;
+    console.log('Form submitted: ', req.body);
 
     try {
         const response = await axios.post(`${HUBSPOT_API_URL}/crm/v3/objects/${OBJECT_TYPE_ID}`, {
@@ -37,6 +42,7 @@ app.post('/update-cobj', async (req, res) => {
                 'Content-Type': 'application/json',
             },
         });
+        console.log("Record created:", response.data);
         res.redirect('/');
     } catch(err) {
         console.error('Error creating object:', err.response?.data || err.message);
